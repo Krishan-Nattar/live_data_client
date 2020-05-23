@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+
+.messageContainer {
+  /* border: 1px solid red; */
+  width: 320px;
+  height:320px;
+  margin: auto;
+  background-image: url('./house.png');
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 const MeetingRoom = (props) => {
-	const [xAxis, setXaxis] = useState(25);
-	const [yAxis, setYaxis] = useState(25);
-	const [otherXAxis, setOtherXaxis] = useState(25);
-	const [otherYAxis, setOtherYaxis] = useState(25);
+	const [xAxis, setXaxis] = useState(32);
+	const [yAxis, setYaxis] = useState(32);
+	const [otherXAxis, setOtherXaxis] = useState(32);
+	const [otherYAxis, setOtherYaxis] = useState(32);
 	const [catMessage, setCatMessage] = useState(false);
 	useEffect(() => {
 		props.io.emit('ready', {
@@ -48,19 +48,19 @@ const MeetingRoom = (props) => {
 			// meowOn();
 
 			setYaxis((prev) => {
-				return prev - 10;
+				return prev - 8;
 			});
 		} else if (direction === 'down') {
 			setYaxis((prev) => {
-				return prev + 10;
+				return prev + 8;
 			});
 		} else if (direction === 'left') {
 			setXaxis((prev) => {
-				return prev - 10;
+				return prev - 8;
 			});
 		} else if (direction === 'right') {
 			setXaxis((prev) => {
-				return prev + 10;
+				return prev + 8;
 			});
 		}
 	}
@@ -70,19 +70,19 @@ const MeetingRoom = (props) => {
 			// meowOn();
 
 			setOtherYaxis((prev) => {
-				return prev - 10;
+				return prev - 8;
 			});
 		} else if (direction === 'down') {
 			setOtherYaxis((prev) => {
-				return prev + 10;
+				return prev + 8;
 			});
 		} else if (direction === 'left') {
 			setOtherXaxis((prev) => {
-				return prev - 10;
+				return prev - 8;
 			});
 		} else if (direction === 'right') {
 			setOtherXaxis((prev) => {
-				return prev + 10;
+				return prev + 8;
 			});
 		}
 	}
@@ -155,12 +155,6 @@ const MeetingRoom = (props) => {
 		position: 'absolute',
 	};
 
-	const messageStyle = {
-        position: 'relative',
-        // border: '1px solid black',
-        width: '400px',
-        margin: 'auto'
-	};
 	return (
 		<div>
 			<p>Hello {props.name}!</p>
@@ -174,7 +168,7 @@ const MeetingRoom = (props) => {
 			<button onClick={sendMove.bind(this, 'left')}>LEFT "a"</button>
 			<button onClick={sendMove.bind(this, 'right')}>RIGHT "d"</button>
 
-			<div className="messageContainer" style = {messageStyle}>
+			<div className="messageContainer">
 				<div style={style}>
 					<img src="./cat.gif" />
 					{catMessage && <p>"MEOW"</p>}
