@@ -26,12 +26,12 @@ function App(props) {
 			setShow(true);
 		}
   };
-  console.log('app');
 	return (
 		<div className="App">
 			{!show && (
         <>
-			<p>Please enter your name</p>
+			{/* <p>Please enter your name</p> */}
+      <br />
 				<form>
 					<input
 						type="text"

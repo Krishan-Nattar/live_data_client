@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 
 const MeetingRoom = (props) => {
     const [xAxis, setXaxis] = useState(25);
-	const [yAxis, setYaxis] = useState(25);
+    const [yAxis, setYaxis] = useState(25);
+    const [otherXAxis, setOtherXaxis] = useState(25);
+	const [otherYAxis, setOtherYaxis] = useState(25);
 	const [catMessage, setCatMessage] = useState(false);
 	useEffect(() => {
 		props.io.emit('ready', {
@@ -59,6 +61,28 @@ const MeetingRoom = (props) => {
 				return prev + 10;
 			});
 		}
+    }
+    
+    function moveOtherCharacter(direction) {
+		if (direction === 'up') {
+			// meowOn();
+
+			setOtherYaxis((prev) => {
+				return prev - 10;
+			});
+		} else if (direction === 'down') {
+			setOtherYaxis((prev) => {
+				return prev + 10;
+			});
+		} else if (direction === 'left') {
+			setOtherXaxis((prev) => {
+				return prev - 10;
+			});
+		} else if (direction === 'right') {
+			setOtherXaxis((prev) => {
+				return prev + 10;
+			});
+		}
 	}
 	function meowOff() {
 		setCatMessage(false);
@@ -76,6 +100,7 @@ const MeetingRoom = (props) => {
 			direction === 'left' ||
 			direction === 'right'
 		) {
+            moveOtherCharacter(direction);
 			props.io.emit('move', {
 				room: SIGNALING_ROOM,
 				direction,
@@ -98,15 +123,21 @@ const MeetingRoom = (props) => {
 	}
 
 	const style = {
-		transform: `translate(${xAxis}px, ${yAxis}px)`,
-	};
+        transform: `translate(${xAxis}px, ${yAxis}px)`,
+        transition: '0.1s',
+        position: 'absolute'
+    };
+
+    const otherStyle = {
+        transform: `translate(${otherXAxis}px, ${otherYAxis}px)`,
+        transition: '0.1s',
+        position: 'absolute'
+    };
+    
 
 	return (
 		<div>
-			<div style={style}>
-				<img src="./cat.gif" />
-				{catMessage && <p>"MEOW"</p>}
-			</div>
+			
 			<p>Hello {props.name}!</p>
 			<form onSubmit={sendData}>
 				<input type="text" placeholder="message" id="inputMessage" />
@@ -118,7 +149,16 @@ const MeetingRoom = (props) => {
 			<button onClick={sendMove.bind(this, 'left')}>LEFT</button>
 			<button onClick={sendMove.bind(this, 'right')}>RIGHT</button>
 
-			<div className="messageContainer"></div>
+			<div className="messageContainer">
+            <div style={style}>
+				<img src="./cat.gif" />
+				{catMessage && <p>"MEOW"</p>}
+			</div>
+            <div style={otherStyle}>
+				<img src="./cat.gif" />
+				{catMessage && <p>"MEOW"</p>}
+			</div>
+            </div>
 		</div>
 	);
 };
