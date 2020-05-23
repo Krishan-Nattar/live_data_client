@@ -6,14 +6,14 @@ const MeetingRoom = (props) => {
 	let ROOM = 'my_ROOM';
 	let SIGNALING_ROOM = 'my_SIGNALING_ROOM';
 
-	function displayMessage(message) {
+	function processData(message) {
 		let messageContainer = document.querySelector('.messageContainer');
 		let newMessage = document.createElement('p');
 		newMessage.textContent = message;
 		messageContainer.appendChild(newMessage);
 	}
 
-	const sendMessageFunction = (e) => {
+	const sendData = (e) => {
 		e.preventDefault();
 		let input = document.getElementById('inputMessage').value;
 		let myName = props.name;
@@ -24,7 +24,7 @@ const MeetingRoom = (props) => {
 			room: SIGNALING_ROOM,
 		});
 
-		displayMessage(myName + ': ' + input);
+		processData(myName + ': ' + input);
 	};
 
 	io.emit('ready', {
@@ -34,17 +34,17 @@ const MeetingRoom = (props) => {
 	});
 
 	io.on('announce', (data) => {
-		displayMessage(data.message);
+		processData(data.message);
 	});
 
 	io.on('message', (data) => {
-		displayMessage(data.author + ': ' + data.message);
+		processData(data.author + ': ' + data.message);
 	});
 
 	return (
 		<div>
 			<p>Hello {props.name}!</p>
-			<form onSubmit={sendMessageFunction}>
+			<form onSubmit={sendData}>
 				<input type="text" placeholder="message" id="inputMessage" />
 				<button type="submit">SEND MESSAGE?</button>
 			</form>
