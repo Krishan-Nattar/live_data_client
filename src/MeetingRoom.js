@@ -1,18 +1,23 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import socketIOClient from 'socket.io-client';
 
-const MeetingRoom = () => {
+const MeetingRoom = (props) => {
 	let io = socketIOClient('https://web-rtc-gameserver.herokuapp.com/');
 	let ROOM = 'my_ROOM';
-	let SIGNALING_ROOM = 'my_SIGNALING_ROOM';
+    let SIGNALING_ROOM = 'my_SIGNALING_ROOM';
+    
+    // useEffect(()=>{
+    //     document.getElementById('inputMessage').focus();
+    //   },[])
 
 	function displayMessage(message) {
-		console.log(message);
+        console.log(message);
 	}
 
-	const sendMessageFunction = () => {
+	const sendMessageFunction = e => {
+        e.preventDefault();
 		let input = document.getElementById('inputMessage').value;
-		let myName = document.getElementById('inputName').value;
+		let myName = props.name;
 
 		io.emit('send', {
 			author: myName,
@@ -37,10 +42,12 @@ const MeetingRoom = () => {
 
 	return (
 		<div>
-			<p>Meeting ROom!</p>
+			<p>Hello {props.name}! Please type your message and check the console.</p>
+            <form onSubmit={sendMessageFunction}>
 			<input type="text" placeholder="message" id="inputMessage" />
-			<input type="text" placeholder="Name" id="inputName" />
-			<button onClick={sendMessageFunction}>SEND MESSAGE?</button>
+			<button type="submit" >SEND MESSAGE?</button>
+
+            </form>
 		</div>
 	);
 };
