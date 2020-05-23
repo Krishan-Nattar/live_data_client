@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import socketIOClient from 'socket.io-client';
 
 const MeetingRoom = (props) => {
@@ -6,10 +6,15 @@ const MeetingRoom = (props) => {
 	let ROOM = 'my_ROOM';
 	let SIGNALING_ROOM = 'my_SIGNALING_ROOM';
 
-	function processData(message) {
+	function processData(message, outsideSource = true) {
 		let messageContainer = document.querySelector('.messageContainer');
 		let newMessage = document.createElement('p');
 		newMessage.textContent = message;
+		if (outsideSource) {
+			newMessage.style.color = 'blue';
+		} else {
+			newMessage.style.color = 'green';
+		}
 		messageContainer.appendChild(newMessage);
 	}
 
@@ -24,7 +29,7 @@ const MeetingRoom = (props) => {
 			room: SIGNALING_ROOM,
 		});
 
-		processData(myName + ': ' + input);
+		processData(myName + ': ' + input, false);
 	};
 
 	io.emit('ready', {
