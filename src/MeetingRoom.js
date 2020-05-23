@@ -9,7 +9,7 @@ const MeetingRoom = (props) => {
 	function displayMessage(message) {
 		let messageContainer = document.querySelector('.messageContainer');
 		let newMessage = document.createElement('p');
-        newMessage.textContent = message;
+		newMessage.textContent = message;
 		messageContainer.appendChild(newMessage);
 	}
 
@@ -22,9 +22,9 @@ const MeetingRoom = (props) => {
 			author: myName,
 			message: input,
 			room: SIGNALING_ROOM,
-        });
-        
-        displayMessage(myName + ': ' + input)
+		});
+
+		displayMessage(myName + ': ' + input);
 	};
 
 	io.emit('ready', {
@@ -43,7 +43,7 @@ const MeetingRoom = (props) => {
 
 	return (
 		<div>
-			<p>Hello {props.name}! Please type your message and check the console.</p>
+			<p>Hello {props.name}!</p>
 			<form onSubmit={sendMessageFunction}>
 				<input type="text" placeholder="message" id="inputMessage" />
 				<button type="submit">SEND MESSAGE?</button>
