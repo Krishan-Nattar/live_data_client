@@ -180,7 +180,7 @@ const MeetingRoom = (props) => {
 					{catMessage && <p>"MEOW"</p>}
 				</div>
 				<div style={otherStyle}>
-					<img src="./cat.gif" />
+					<img src="./dog.gif" />
 					{catMessage && <p>"MEOW"</p>}
 				</div>
 			</div>
