@@ -5,7 +5,10 @@ const MeetingRoom = (props) => {
 	const [yAxis, setYaxis] = useState(32);
 	const [otherXAxis, setOtherXaxis] = useState(32);
 	const [otherYAxis, setOtherYaxis] = useState(32);
-	const [catMessage, setCatMessage] = useState(false);
+    const [catMessage, setCatMessage] = useState(false);
+    const [dogMessage, setDogMessage] = useState(false);
+	const [myMessage, setMyMessage] = useState('');
+	const [otherMessage, setOtherMessage] = useState('');
 	useEffect(() => {
 		props.io.emit('ready', {
 			chat_room: ROOM,
@@ -18,35 +21,52 @@ const MeetingRoom = (props) => {
 		});
 
 		props.io.on('message', (data) => {
-			processData(data.author + ': ' + data.message);
+			// processData(data.author + ': ' + data.message);
+			processData(data.message);
 		});
 
 		props.io.on('move', (data) => {
 			moveCharacter(data.direction);
-        });
-        
-        document.addEventListener('keydown', sendMove);
+		});
+
+		document.addEventListener('keydown', sendMove);
 	}, []);
 
 	let ROOM = props.channel;
 	let SIGNALING_ROOM = `${props.channel}z`;
 
 	function processData(message, outsideSource = true) {
-		let messageContainer = document.querySelector('.messageContainer');
-		let newMessage = document.createElement('p');
-		newMessage.textContent = message;
+		// let messageContainer = document.querySelector('.messageContainer');
+		// let newMessage = document.createElement('p');
+		// newMessage.textContent = message;
 		if (outsideSource) {
-			newMessage.style.color = 'blue';
+			// newMessage.style.color = 'blue';
+            setOtherMessage(message);
+            // woofOn()
+            return;
 		} else {
-			newMessage.style.color = 'green';
+			// newMessage.style.color = 'green';
+			setMyMessage(message);
 		}
-		messageContainer.appendChild(newMessage);
-	}
+        // meowOn();
+		// messageContainer.appendChild(newMessage);
+    }
+    
+
+    useEffect(()=>{
+        if(myMessage !== ''){
+            woofOn()
+        }
+    },[myMessage])
+
+    useEffect(()=>{
+        if(otherMessage !== ''){
+            meowOn()
+        }
+    },[otherMessage])
 
 	function moveCharacter(direction) {
 		if (direction === 'up') {
-			// meowOn();
-
 			setYaxis((prev) => {
 				return prev - 8;
 			});
@@ -67,8 +87,6 @@ const MeetingRoom = (props) => {
 
 	function moveOtherCharacter(direction) {
 		if (direction === 'up') {
-			// meowOn();
-
 			setOtherYaxis((prev) => {
 				return prev - 8;
 			});
@@ -92,29 +110,35 @@ const MeetingRoom = (props) => {
 	function meowOn() {
 		setCatMessage(true);
 		setTimeout(meowOff, 3000);
+    }
+    
+    function woofOff() {
+		setDogMessage(false);
+	}
+	function woofOn() {
+		setDogMessage(true);
+		setTimeout(woofOff, 3000);
 	}
 
 	function sendMove(direction) {
-        if(direction.key){
-            let key = direction.key;
-            if(key === "w"){
-                direction = "up"
-
-            } else if(key === "a"){
-                direction = "left"
-
-            } else if(key === "s"){
-                direction = "down"
-            } else if(key === "d"){
-                direction = "right";
-            }
-            moveOtherCharacter(direction);
+		if (direction.key) {
+			let key = direction.key;
+			if (key === 'w') {
+				direction = 'up';
+			} else if (key === 'a') {
+				direction = 'left';
+			} else if (key === 's') {
+				direction = 'down';
+			} else if (key === 'd') {
+				direction = 'right';
+			}
+			moveOtherCharacter(direction);
 			props.io.emit('move', {
 				room: SIGNALING_ROOM,
 				direction,
-            });
-            return;
-        }
+			});
+			return;
+		}
 		if (
 			direction === 'up' ||
 			direction === 'down' ||
@@ -140,7 +164,8 @@ const MeetingRoom = (props) => {
 			room: SIGNALING_ROOM,
 		});
 
-		processData(myName + ': ' + input, false);
+        processData(input, false);
+        // woofOn();
 	}
 
 	const style = {
@@ -153,6 +178,33 @@ const MeetingRoom = (props) => {
 		transform: `translate(${otherXAxis}px, ${otherYAxis}px)`,
 		transition: '0.1s',
 		position: 'absolute',
+    };
+    
+    const getMessageOffset = () =>{
+        let pixels = otherMessage.length * 5;
+        return pixels;
+
+    }
+
+	const messageStyle = {
+		transform: `translate(0px, ${-70}px)`,
+		transition: '0.1s',
+        position: 'absolute',
+        borderRadius: '6px',
+        padding: '5px 0',
+        color: 'pink',
+        // backgroundColor: 'rgb(255, 0, 0)',
+
+        
+	};
+
+	const otherMessageStyle = {
+		transform: `translate(0px, ${-70}px)`,
+		transition: '0.1s',
+        position: 'absolute',
+        borderRadius: '6px',
+        padding: '5px 0',
+        color: 'pink',
 	};
 
 	return (
@@ -171,11 +223,11 @@ const MeetingRoom = (props) => {
 			<div className="messageContainer">
 				<div style={style}>
 					<img src="./cat.gif" />
-					{catMessage && <p>"MEOW"</p>}
+			{catMessage && <p style={messageStyle}>{otherMessage}</p>}
 				</div>
 				<div style={otherStyle}>
 					<img src="./dog.gif" />
-					{catMessage && <p>"MEOW"</p>}
+			{dogMessage && <p className="otherMessage" style={otherMessageStyle}>{myMessage}</p>}
 				</div>
 			</div>
 		</div>
