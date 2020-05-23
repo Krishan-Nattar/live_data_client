@@ -1,30 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import socketIOClient from 'socket.io-client';
-// import { useEffect } from 'react';
 
 const MeetingRoom = (props) => {
-	const [xAxis, setXaxis] = useState(25);
+    const [xAxis, setXaxis] = useState(25);
 	const [yAxis, setYaxis] = useState(25);
 	const [catMessage, setCatMessage] = useState(false);
-
-	let io = socketIOClient('https://web-rtc-gameserver.herokuapp.com/');
 	useEffect(() => {
-		io.emit('ready', {
+		props.io.emit('ready', {
 			chat_room: ROOM,
 			signaling_room: SIGNALING_ROOM,
 			my_name: props.name,
 		});
 
-		io.on('announce', (data) => {
+		props.io.on('announce', (data) => {
 			processData(data.message);
 		});
 
-		io.on('message', (data) => {
-			// processData(data.message);
+		props.io.on('message', (data) => {
 			processData(data.author + ': ' + data.message);
 		});
 
-		io.on('move', (data) => {
+		props.io.on('move', (data) => {
 			moveCharacter(data.direction);
 		});
 	}, []);
@@ -46,7 +41,7 @@ const MeetingRoom = (props) => {
 
 	function moveCharacter(direction) {
 		if (direction === 'up') {
-			// meow();
+			// meowOn();
 
 			setYaxis((prev) => {
 				return prev - 10;
@@ -68,7 +63,7 @@ const MeetingRoom = (props) => {
 	function meowOff() {
 		setCatMessage(false);
 	}
-	function meow() {
+	function meowOn() {
 		setCatMessage(true);
 		setTimeout(meowOff, 3000);
 	}
@@ -81,7 +76,7 @@ const MeetingRoom = (props) => {
 			direction === 'left' ||
 			direction === 'right'
 		) {
-			io.emit('move', {
+			props.io.emit('move', {
 				room: SIGNALING_ROOM,
 				direction,
 			});
@@ -93,7 +88,7 @@ const MeetingRoom = (props) => {
 		let input = document.getElementById('inputMessage').value;
 		let myName = props.name;
 
-		io.emit('send', {
+		props.io.emit('send', {
 			author: myName,
 			message: input,
 			room: SIGNALING_ROOM,

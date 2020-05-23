@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import MeetingRoom from './MeetingRoom';
 
-function App() {
+function App(props) {
 
   useEffect(()=>{
     document.getElementById('inputName').focus();
@@ -25,7 +25,8 @@ function App() {
 		if (name !== '' && channel !== '') {
 			setShow(true);
 		}
-	};
+  };
+  console.log('app');
 	return (
 		<div className="App">
 			{!show && (
@@ -53,7 +54,7 @@ function App() {
 				</form>
         </>
 			)}
-			{show && <MeetingRoom name={name} channel={channel} />}
+			{show && <MeetingRoom name={name} channel={channel} io={props.io}/>}
 		</div>
 	);
 }
