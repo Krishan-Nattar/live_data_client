@@ -23,7 +23,9 @@ const MeetingRoom = (props) => {
 
 		props.io.on('move', (data) => {
 			moveCharacter(data.direction);
-		});
+        });
+        
+        document.addEventListener('keydown', sendMove);
 	}, []);
 
 	let ROOM = props.channel;
@@ -93,6 +95,26 @@ const MeetingRoom = (props) => {
 	}
 
 	function sendMove(direction) {
+        if(direction.key){
+            let key = direction.key;
+            if(key === "w"){
+                direction = "up"
+
+            } else if(key === "a"){
+                direction = "left"
+
+            } else if(key === "s"){
+                direction = "down"
+            } else if(key === "d"){
+                direction = "right";
+            }
+            moveOtherCharacter(direction);
+			props.io.emit('move', {
+				room: SIGNALING_ROOM,
+				direction,
+            });
+            return;
+        }
 		if (
 			direction === 'up' ||
 			direction === 'down' ||
@@ -147,10 +169,10 @@ const MeetingRoom = (props) => {
 				<button type="submit">SEND MESSAGE?</button>
 			</form>
 
-			<button onClick={sendMove.bind(this, 'up')}>UP</button>
-			<button onClick={sendMove.bind(this, 'down')}>DOWN</button>
-			<button onClick={sendMove.bind(this, 'left')}>LEFT</button>
-			<button onClick={sendMove.bind(this, 'right')}>RIGHT</button>
+			<button onClick={sendMove.bind(this, 'up')}>UP "w"</button>
+			<button onClick={sendMove.bind(this, 'down')}>DOWN "s"</button>
+			<button onClick={sendMove.bind(this, 'left')}>LEFT "a"</button>
+			<button onClick={sendMove.bind(this, 'right')}>RIGHT "d"</button>
 
 			<div className="messageContainer" style = {messageStyle}>
 				<div style={style}>
