@@ -25,6 +25,7 @@ const MeetingRoom = (props) => {
         });
         
         io.on('move', (data) => {
+            console.log('MOVING')
             moveCharacter(data.direction);
 		});
 	}, []);
@@ -75,12 +76,14 @@ const MeetingRoom = (props) => {
     }
 
     function sendMove(direction) {
+        console.log("SEND MOVE", direction);
         
         if(direction === "up" || direction === "down" || direction === "left" || direction === "right"){
 
         }
         
         io.emit('move', {
+            room: SIGNALING_ROOM,
 			direction
 		});
     }
