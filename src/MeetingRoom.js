@@ -102,10 +102,10 @@ const MeetingRoom = (props) => {
 		// 	.setAttribute('style', 'white-space: pre;');
 		// document.querySelector('#chatArea').scrollTop = 10000000;
 		// chatArea.textContent = chatArea.textContent + "<br/>" + message;
-		console.log(message);
+		console.log("DISPLAYMESSAGE", message);
 	}
 	function displaySignalingMessage(message) {
-		console.log('SIGNALING MESSAGE', message);
+		console.log('DISPLAY SIGNALING MESSAGE', message);
 		// console.log(message)
 		// signalingArea.setAttribute('style', 'white-space: pre;');
 		// signalingArea.textContent += '\r\n' + message;
@@ -113,16 +113,16 @@ const MeetingRoom = (props) => {
 
 	const sendMessageFunction = () => {
 
-        let input = document.getElementById('input1');
-        
+        let input = document.getElementById('inputMessage').value;
+        let myName = document.getElementById('inputName').value;
+    
 		
-		
-			displayMessage(
-				`The message is ${input.value}`,
-			);
+			// displayMessage(
+			// 	`The message is ${input.value}`,
+			// );
 			io.emit('send', {
-				author: props.myName,
-				message: input.value,
+				author: myName,
+				message: input,
 				room: SIGNALING_ROOM,
 			});
 		
@@ -135,11 +135,11 @@ const MeetingRoom = (props) => {
 		my_name: 'KRISHAN',
 	});
 
-	io.emit('signal', {
-		type: 'user_here',
-		message: 'Are you ready for a call?',
-		room: SIGNALING_ROOM,
-	});
+	// io.emit('signal', {
+	// 	type: 'user_here',
+	// 	message: 'Are you ready for a call?',
+	// 	room: SIGNALING_ROOM,
+	// });
 
 	io.on('signaling_message', (data) => {
 		displaySignalingMessage('Signal received: ' + data.message);
@@ -176,7 +176,8 @@ const MeetingRoom = (props) => {
 	return (
 		<div>
 			<p>Meeting ROom!</p>
-            <input type="text" placeholder="message" id="input1" />
+            <input type="text" placeholder="message" id="inputMessage" />
+            <input type="text" placeholder="Name"  id="inputName" />
             <button onClick={sendMessageFunction}>SEND MESSAGE?</button>
 		</div>
 	);
