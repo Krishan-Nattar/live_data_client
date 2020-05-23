@@ -45,8 +45,8 @@ function App() {
 						placeholder="Channel Name"
 						onChange={handleChannelChange}
             value={channel}
-            // id="inputChannel"
 					/>
+          <br />
 					<button type="submit" onClick={handleSubmit}>
 						OK
 					</button>
