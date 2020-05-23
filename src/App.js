@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       
         <p>
-          GAME SERVER!
+          GAME SERVER!?
         </p>
         <MeetingRoom />
       
