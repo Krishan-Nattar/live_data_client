@@ -3,8 +3,8 @@ import socketIOClient from 'socket.io-client';
 
 const MeetingRoom = (props) => {
 	let io = socketIOClient('https://web-rtc-gameserver.herokuapp.com/');
-	let ROOM = 'my_ROOM';
-	let SIGNALING_ROOM = 'my_SIGNALING_ROOM';
+	let ROOM = props.channel;
+	let SIGNALING_ROOM = `${props.channel}z`;
 
 	function processData(message, outsideSource = true) {
 		let messageContainer = document.querySelector('.messageContainer');

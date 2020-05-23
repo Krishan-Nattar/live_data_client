@@ -8,16 +8,21 @@ function App() {
     document.getElementById('inputName').focus();
   },[])
 
-	let [name, setName] = useState('');
+  let [name, setName] = useState('');
+  let [channel, setChannel] = useState('');
 	let [show, setShow] = useState(false);
 
-	const handleChange = (e) => {
+	const handleNameChange = (e) => {
 		setName(e.target.value);
+  };
+  
+  const handleChannelChange = (e) => {
+		setChannel(e.target.value);
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (name !== '') {
+		if (name !== '' && channel !== '') {
 			setShow(true);
 		}
 	};
@@ -30,9 +35,17 @@ function App() {
 					<input
 						type="text"
 						placeholder="Name"
-						onChange={handleChange}
+						onChange={handleNameChange}
             value={name}
             id="inputName"
+					/>
+          <br />
+          <input
+						type="text"
+						placeholder="Channel Name"
+						onChange={handleChannelChange}
+            value={channel}
+            // id="inputChannel"
 					/>
 					<button type="submit" onClick={handleSubmit}>
 						OK
@@ -40,7 +53,7 @@ function App() {
 				</form>
         </>
 			)}
-			{show && <MeetingRoom name={name} />}
+			{show && <MeetingRoom name={name} channel={channel} />}
 		</div>
 	);
 }
