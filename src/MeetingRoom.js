@@ -4,8 +4,8 @@ import socketIOClient from 'socket.io-client';
 
 const MeetingRoom = (props) => {
 	const [xAxis, setXaxis] = useState(25);
-    const [yAxis, setYaxis] = useState(25);
-    const [catMessage, setCatMessage] = useState(false)
+	const [yAxis, setYaxis] = useState(25);
+	const [catMessage, setCatMessage] = useState(false);
 
 	let io = socketIOClient('https://web-rtc-gameserver.herokuapp.com/');
 	useEffect(() => {
@@ -22,11 +22,10 @@ const MeetingRoom = (props) => {
 		io.on('message', (data) => {
 			// processData(data.message);
 			processData(data.author + ': ' + data.message);
-        });
-        
-        io.on('move', (data) => {
-            console.log('MOVING')
-            moveCharacter(data.direction);
+		});
+
+		io.on('move', (data) => {
+			moveCharacter(data.direction);
 		});
 	}, []);
 
@@ -39,54 +38,55 @@ const MeetingRoom = (props) => {
 		newMessage.textContent = message;
 		if (outsideSource) {
 			newMessage.style.color = 'blue';
-			// console.log(message)
-			// console.log(parseInt(message));
-            // let myNumber = message.split(' ')
-            // meow();
-			// setXaxis((prev) => {
-			// 	return prev + parseInt(message);
-			// });
-			// setYaxis((prev) => {
-			// 	return prev + 10;
-			// });
 		} else {
 			newMessage.style.color = 'green';
 		}
 		messageContainer.appendChild(newMessage);
-    }
+	}
 
-    function moveCharacter(direction){
-        if(direction==="up"){
+	function moveCharacter(direction) {
+		if (direction === 'up') {
+			// meow();
 
-        } else if(direction==="down"){
+			setYaxis((prev) => {
+				return prev - 10;
+			});
+		} else if (direction === 'down') {
+			setYaxis((prev) => {
+				return prev + 10;
+			});
+		} else if (direction === 'left') {
+			setXaxis((prev) => {
+				return prev - 10;
+			});
+		} else if (direction === 'right') {
+			setXaxis((prev) => {
+				return prev + 10;
+			});
+		}
+	}
+	function meowOff() {
+		setCatMessage(false);
+	}
+	function meow() {
+		setCatMessage(true);
+		setTimeout(meowOff, 3000);
+	}
 
-        } else if(direction==="left"){
+	function sendMove(direction) {
 
-        } else if(direction==="right"){
-
-        } 
-        console.log(direction);
-    }
-    function meowOff() {
-        setCatMessage(false);
-    }
-    function meow(){
-        setCatMessage(true);
-        setTimeout(meowOff, 3000);
-    }
-
-    function sendMove(direction) {
-        console.log("SEND MOVE", direction);
-        
-        if(direction === "up" || direction === "down" || direction === "left" || direction === "right"){
-
-        }
-        
-        io.emit('move', {
-            room: SIGNALING_ROOM,
-			direction
-		});
-    }
+		if (
+			direction === 'up' ||
+			direction === 'down' ||
+			direction === 'left' ||
+			direction === 'right'
+		) {
+			io.emit('move', {
+				room: SIGNALING_ROOM,
+				direction,
+			});
+		}
+	}
 
 	function sendData(e) {
 		e.preventDefault();
@@ -110,7 +110,7 @@ const MeetingRoom = (props) => {
 		<div>
 			<div style={style}>
 				<img src="./cat.gif" />
-                {catMessage && <p>"MEOW"</p>}
+				{catMessage && <p>"MEOW"</p>}
 			</div>
 			<p>Hello {props.name}!</p>
 			<form onSubmit={sendData}>
@@ -118,10 +118,10 @@ const MeetingRoom = (props) => {
 				<button type="submit">SEND MESSAGE?</button>
 			</form>
 
-			<button onClick={sendMove.bind(this, "up")}>UP</button>
-            <button onClick={sendMove.bind(this, "down")}>DOWN</button>
-            <button onClick={sendMove.bind(this, "left")}>LEFT</button>
-            <button onClick={sendMove.bind(this, "right")}>RIGHT</button>
+			<button onClick={sendMove.bind(this, 'up')}>UP</button>
+			<button onClick={sendMove.bind(this, 'down')}>DOWN</button>
+			<button onClick={sendMove.bind(this, 'left')}>LEFT</button>
+			<button onClick={sendMove.bind(this, 'right')}>RIGHT</button>
 
 			<div className="messageContainer"></div>
 		</div>
